@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>中秋佳节</title>
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        width: 100vw;
+        height: 100vh;
+        overflow: hidden;
+        background: radial-gradient(circle at 50% 30%, #121a3a 0%, #070918 70%, #05060f 100%);
+        font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+    }
+
+    /* 月光光晕 */
+    .moon-glow {
+        position: absolute;
+        width: 420px;
+        height: 420px;
+        border-radius: 50%;
+        background: radial-gradient(circle, rgba(255, 249, 184, 0.35) 0%, rgba(255, 232, 136, 0.12) 40%, transparent 70%);
+        animation: glowExpand 6s ease-in-out infinite;
+        pointer-events: none;
+        z-index: 0;
+    }
+
+    @keyframes glowExpand {
+        0%, 100% { transform: scale(1); opacity: 0.85; }
+        50% { transform: scale(1.08); opacity: 1; }
+    }
+
+    /* 月亮 */
+    .moon {
+        width: 220px;
+        height: 220px;
+        border-radius: 50%;
+        background: radial-gradient(circle at 35% 30%, #fffbe4, #fff5a8 55%, #ffe27a);
+        box-shadow:
+            0 0 70px rgba(255, 249, 184, 0.9),
+            0 0 140px rgba(255, 232, 136, 0.6),
+            inset -18px -20px 40px rgba(210, 170, 90, 0.35);
+        animation: moonShine 4s ease-in-out infinite;
+        position: relative;
+        z-index: 1;
+    }
+
+    @keyframes moonShine {
+        0%, 100% { box-shadow: 0 0 70px #fff9b8, 0 0 140px #ffe888, inset -18px -20px 40px rgba(210, 170, 90, 0.35); }
+        50% { box-shadow: 0 0 90px #fff9b8, 0 0 170px #ffe888, inset -18px -20px 40px rgba(210, 170, 90, 0.45); }
+    }
+
+    /* 远山剪影 */
+    .mountain {
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        height: 180px;
+        background:
+            linear-gradient(180deg, transparent 0%, #0a1028 100%),
+            radial-gradient(ellipse 80% 100% at 20% 100%, #121a33 0%, transparent 60%),
+            radial-gradient(ellipse 60% 80% at 70% 100%, #0e1630 0%, transparent 55%);
+        z-index: 1;
+        pointer-events: none;
+    }
+
+    /* 薄雾 */
+    .fog {
+        position: absolute;
+        width: 200%;
+        height: 180px;
+        left: -50%;
+        bottom: 80px;
+        background: linear-gradient(90deg,
+            transparent 0%,
+            rgba(255, 255, 255, 0.06) 25%,
+            rgba(255, 255, 255, 0.12) 50%,
+            rgba(255, 255, 255, 0.06) 75%,
+            transparent 100%);
+        animation: fogMove 28s linear infinite;
+        z-index: 2;
+        pointer-events: none;
+    }
+
+    @keyframes fogMove {
+        0% { transform: translateX(-25%); }
+        100% { transform: translateX(25%); }
+    }
+
+    .title {
+        margin-top: 40px;
+        color: #ffefbc;
+        font-size: 42px;
+        letter-spacing: 8px;
+        opacity: 0;
+        animation: fadeIn 2s ease forwards;
+        position: relative;
+        z-index: 3;
+        text-shadow: 0 0 20px rgba(255, 232, 136, 0.45);
+    }
+
+    .poem {
+        margin-top: 30px;
+        color: #e9ddb3;
+        font-size: 20px;
+        line-height: 2.2;
+        text-align: center;
+        opacity: 0;
+        animation: fadeIn 2s ease 0.8s forwards;
+        position: relative;
+        z-index: 3;
+    }
+
+    .info {
+        position: absolute;
+        bottom: 50px;
+        color: #c9bc96;
+        font-size: 16px;
+        opacity: 0;
+        animation: fadeIn 2s ease 1.5s forwards;
+        z-index: 3;
+        text-align: center;
+    }
+
+    /* ===== 全屏漂浮祝福语 ===== */
+    .floating-wish {
+        position: absolute;
+        color: #ffd97a;
+        font-size: 18px;
+        letter-spacing: 2px;
+        text-shadow: 0 0 15px rgba(255, 217, 122, 0.6);
+        opacity: 0;
+        transform: translateY(10px);
+        transition: opacity 1.2s ease, transform 1.2s ease;
+        pointer-events: none;
+        z-index: 5;
+        white-space: nowrap;
+    }
+
+    .floating-wish.show {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    /* 桂花 */
+    .flower {
+        position: absolute;
+        width: 10px;
+        height: 10px;
+        background: #ffed99;
+        border-radius: 50% 0 50% 50%;
+        opacity: 0.85;
+        animation: fall linear infinite;
+        pointer-events: none;
+        z-index: 4;
+    }
+
+    @keyframes fall {
+        0% {
+            transform: translateY(-20px) translateX(0) rotate(0deg);
+        }
+        25% {
+            transform: translateY(25vh) translateX(8px) rotate(90deg);
+        }
+        50% {
+            transform: translateY(50vh) translateX(-6px) rotate(180deg);
+        }
+        75% {
+            transform: translateY(75vh) translateX(10px) rotate(270deg);
+        }
+        100% {
+            transform: translateY(100vh) translateX(-4px) rotate(360deg);
+        }
+    }
+
+    /* 背景星星 */
+    .star {
+        position: absolute;
+        background: #fff;
+        border-radius: 50%;
+        animation: twinkle ease-in-out infinite;
+        pointer-events: none;
+        z-index: 1;
+    }
+
+    @keyframes twinkle {
+        0%, 100% { opacity: 0.25; }
+        50% { opacity: 1; }
+    }
+
+    /* 点击烟花 */
+    .firework {
+        position: absolute;
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: #ffe888;
+        box-shadow: 0 0 10px #fff4a8, 0 0 20px #ffcf5c;
+        pointer-events: none;
+        z-index: 5;
+    }
+
+    @keyframes burst {
+        0% { transform: translate(-50%, -50%) scale(0.3); opacity: 1; }
+        100% { transform: translate(var(--tx), var(--ty)) scale(0.6); opacity: 0; }
+    }
+
+    /* 淡入 */
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+</style>
+</head>
+
+<body>
+    <div class="moon-glow"></div>
+    <div class="moon"></div>
+
+    <h1 class="title">中秋月圆</h1>
+
+    <div class="poem">
+        月满秋宵，桂香漫野。愿李蒙西岁岁皆欢愉，年年皆胜意。<br>
+        中秋月圆，万事安然，往后的日子，永远被温柔与好运相拥，眼里常有星光，心中常驻欢喜。
+    </div>
+
+    <div class="fog"></div>
+    <div class="mountain"></div>
+
+    <div class="info">
+        致：李蒙西<br>
+        中秋喜乐 · 花好月圆
+    </div>
+
+    <script>
+        // ===== 背景星星 =====
+        function createStar() {
+            const star = document.createElement('div');
+            star.className = 'star';
+            const size = Math.random() * 2 + 1;
+            star.style.width = size + 'px';
+            star.style.height = size + 'px';
+            star.style.left = Math.random() * 100 + 'vw';
+            star.style.top = Math.random() * 100 + 'vh';
+            star.style.animationDuration = (Math.random() * 3 + 1) + 's';
+            document.body.appendChild(star);
+        }
+        for (let i = 0; i < 80; i++) createStar();
+
+        // ===== 桂花生成 =====
+        let flowerList = [];
+        const MAX_FLOWER = 60;
+
+        function createFlower(x, y) {
+            if (flowerList.length >= MAX_FLOWER) {
+                const old = flowerList.shift();
+                old.remove();
+            }
+
+            const flower = document.createElement("div");
+            flower.className = "flower";
+
+            if (x !== undefined && y !== undefined) {
+                flower.style.left = x + "px";
+                flower.style.top = y + "px";
+            } else {
+                flower.style.left = Math.random() * 100 + "vw";
+                flower.style.top = "-20px";
+            }
+
+            flower.style.animationDuration = (Math.random() * 4 + 3) + "s";
+            document.body.appendChild(flower);
+            flowerList.push(flower);
+
+            setTimeout(() => {
+                flower.remove();
+                const idx = flowerList.indexOf(flower);
+                if (idx > -1) flowerList.splice(idx, 1);
+            }, 7000);
+        }
+
+        setInterval(createFlower, 300);
+
+        // 鼠标节流
+        let mouseThrottle = false;
+        const THROTTLE_TIME = 120;
+
+        document.addEventListener('mousemove', e => {
+            if (mouseThrottle) return;
+            mouseThrottle = true;
+            createFlower(e.clientX, e.clientY);
+            setTimeout(() => {
+                mouseThrottle = false;
+            }, THROTTLE_TIME);
+        });
+
+        // ===== 全屏随机漂浮祝福语（全部带祝李蒙西） =====
+        const wishes = [
+            "愿你岁岁平安，万事皆圆满",
+            "月圆人安，花好景长",
+            "清辉相伴，日日欢愉",
+            "中秋喜乐，万事顺心",
+            "小蒙西要天天快乐呀",
+            "所念皆如愿，所行皆坦途",
+            "桂香常伴，岁岁无忧",
+            "月光温柔，好运常临",
+            "小蒙西要天天开心呀"
+        ];
+
+        let lastWishIndex = -1;
+
+        // 禁区判断：避开月亮、中间文字、底部落款
+        function isInForbiddenArea(x, y, textW = 220, textH = 30) {
+            const w = window.innerWidth;
+            const h = window.innerHeight;
+            // 月亮区域（屏幕垂直居中）
+            const moonCenterX = w / 2;
+            const moonCenterY = h / 2 - 120;
+            const moonRadius = 240;
+            const dx = x + textW/2 - moonCenterX;
+            const dy = y + textH/2 - moonCenterY;
+            const dist = Math.sqrt(dx*dx + dy*dy);
+            if(dist < moonRadius) return true;
+
+            // 中间主标题祝福文字区域
+            const titleTop = h/2 + 10;
+            const titleBottom = h/2 + 120;
+            const titleLeft = w*0.2;
+            const titleRight = w*0.8;
+            if(y+textH > titleTop && y < titleBottom && x+textW > titleLeft && x < titleRight) return true;
+
+            // 底部落款区域
+            const footerTop = h - 120;
+            if(y > footerTop) return true;
+
+            return false;
+        }
+
+        function getSafePosition() {
+            const marginX = 80;
+            const marginY = 60;
+            let x,y,count=0;
+            do {
+                x = Math.random() * (window.innerWidth - marginX * 2) + marginX;
+                y = Math.random() * (window.innerHeight - marginY * 2) + marginY;
+                count++;
+            } while(isInForbiddenArea(x,y) && count < 200);
+            return {x,y};
+        }
+
+        function showRandomWish() {
+            // 随机选一句，避免和上一句重复
+            let idx;
+            do {
+                idx = Math.floor(Math.random() * wishes.length);
+            } while (idx === lastWishIndex);
+            lastWishIndex = idx;
+
+            const pos = getSafePosition();
+            const wish = document.createElement('div');
+            wish.className = 'floating-wish';
+            wish.textContent = wishes[idx];
+            wish.style.left = pos.x + 'px';
+            wish.style.top = pos.y + 'px';
+            document.body.appendChild(wish);
+
+            // 淡入
+            requestAnimationFrame(() => {
+                wish.classList.add('show');
+            });
+
+            // 停留 3.5 秒后淡出
+            setTimeout(() => {
+                wish.classList.remove('show');
+                // 淡出动画结束后移除元素
+                setTimeout(() => wish.remove(), 1500);
+            }, 3500);
+
+            // 再间隔 1.5 秒后出现下一句
+            setTimeout(showRandomWish, 5000);
+        }
+
+        // 页面加载后 2 秒开始第一句
+        setTimeout(showRandomWish, 2000);
+
+        // ===== 点击小烟花 =====
+        document.addEventListener('click', e => {
+            for (let i = 0; i < 14; i++) {
+                const p = document.createElement('div');
+                p.className = 'firework';
+                p.style.left = e.clientX + 'px';
+                p.style.top = e.clientY + 'px';
+
+                const angle = (Math.PI * 2 * i) / 14;
+                const distance = 60 + Math.random() * 40;
+                const tx = Math.cos(angle) * distance;
+                const ty = Math.sin(angle) * distance;
+
+                p.style.setProperty('--tx', tx + 'px');
+                p.style.setProperty('--ty', ty + 'px');
+                p.style.animation = 'burst 1.1s ease-out forwards';
+
+                document.body.appendChild(p);
+                setTimeout(() => p.remove(), 1100);
+            }
+        });
+    </script>
+</body>
+</html>
